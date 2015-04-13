@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ip">terranz.ath.cx</string>
+    <string name="login">login</string>
+    <string name="pass">pass</string>
+    <string name="loggedIn">loggedIn</string>
+</resources>
