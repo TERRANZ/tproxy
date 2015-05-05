@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:drawable="@drawable/rounded" />
+    <item android:drawable="@drawable/solid" />
+
+</layer-list><!-- From: file:/home/terranz/Dropbox/projects/freelance/tproxy/android_studio/app/src/main/res/drawable-hdpi/rounded_inside_corners.xml -->

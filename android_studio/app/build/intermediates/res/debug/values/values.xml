@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/home/terranz/Dropbox/projects/freelance/tproxy/android_studio/app/src/main/res/values/colors.xml -->
+    <eat-comment/>
+    <color name="black_overlay">#66000000</color>
+    <declare-styleable name="ButtonBarContainerTheme"><attr format="reference" name="metaButtonBarStyle"/><attr format="reference" name="metaButtonBarButtonStyle"/></declare-styleable>
+    <!-- From: file:/home/terranz/Dropbox/projects/freelance/tproxy/android_studio/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="app_name">Proxy</string>
+    <string name="desktop_addr">desktop_addr</string>
+    <string name="desktop_addr_title">Desktop address</string>
+    <string name="error_caught">Ошибка</string>
+    <!-- From: file:/home/terranz/Dropbox/projects/freelance/tproxy/android_studio/app/src/main/res/values/prefs.xml -->
+    <eat-comment/>
+    <string name="ip">terranz.ath.cx</string>
+    <string name="loggedIn">loggedIn</string>
+    <string name="login">login</string>
+    <string name="pass">pass</string>
+    <!-- From: file:/home/terranz/Dropbox/projects/freelance/tproxy/android_studio/app/src/main/res/values/styles.xml -->
+    <eat-comment/>
+    <style name="FullscreenTheme" parent="android:Theme.Holo.Light">
+
+    </style>
+</resources>

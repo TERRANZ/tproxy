@@ -1,0 +1,31 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 20
+    buildToolsVersion "21.1.2"
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    defaultConfig {
+        applicationId "ru.terra.tproxy"
+        minSdkVersion 14
+        targetSdkVersion 19
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    dependencies {
+        compile group: 'ch.acra', name: 'acra', version: '4.5.0'
+        compile group: 'com.google.android', name: 'support-v4', version: 'r7'
+        compile('org.littleshoot:littleproxy:1.0.0-beta7') {
+            exclude group: 'com.barchart.udt', module: 'barchart-udt-bundle'
+        }
+        compile group: 'com.jcraft', name: 'jsch', version: '0.1.52'
+    }
+}

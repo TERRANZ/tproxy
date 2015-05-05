@@ -1,0 +1,131 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* .idea/
+* .idea/.name
+* .idea/compiler.xml
+* .idea/copyright/
+* .idea/copyright/profiles_settings.xml
+* .idea/encodings.xml
+* .idea/libraries/
+* .idea/libraries/Maven__ch_acra_acra_4_5_0.xml
+* .idea/libraries/Maven__com_barchart_udt_barchart_udt_bundle_2_3_0.xml
+* .idea/libraries/Maven__com_google_android_android_4_1_1_4.xml
+* .idea/libraries/Maven__com_google_android_support_v4_r7.xml
+* .idea/libraries/Maven__com_google_guava_guava_14_0_1.xml
+* .idea/libraries/Maven__com_jcraft_jsch_0_1_52.xml
+* .idea/libraries/Maven__commons_cli_commons_cli_1_2.xml
+* .idea/libraries/Maven__commons_codec_commons_codec_1_7.xml
+* .idea/libraries/Maven__commons_io_commons_io_2_4.xml
+* .idea/libraries/Maven__commons_logging_commons_logging_1_1_1.xml
+* .idea/libraries/Maven__io_netty_netty_all_4_0_14_Final.xml
+* .idea/libraries/Maven__log4j_log4j_1_2_17.xml
+* .idea/libraries/Maven__org_apache_commons_commons_lang3_3_1.xml
+* .idea/libraries/Maven__org_apache_httpcomponents_httpclient_4_0_1.xml
+* .idea/libraries/Maven__org_apache_httpcomponents_httpcore_4_0_1.xml
+* .idea/libraries/Maven__org_apache_sshd_sshd_core_0_14_0.xml
+* .idea/libraries/Maven__org_json_json_20080701.xml
+* .idea/libraries/Maven__org_khronos_opengl_api_gl1_1_android_2_1_r1.xml
+* .idea/libraries/Maven__org_littleshoot_dnsjava_2_1_3.xml
+* .idea/libraries/Maven__org_littleshoot_dnssec4j_0_1.xml
+* .idea/libraries/Maven__org_littleshoot_littleproxy_1_0_0_beta7.xml
+* .idea/libraries/Maven__org_slf4j_slf4j_api_1_7_2.xml
+* .idea/libraries/Maven__org_slf4j_slf4j_log4j12_1_7_2.xml
+* .idea/libraries/Maven__xerces_xmlParserAPIs_2_6_2.xml
+* .idea/libraries/Maven__xpp3_xpp3_1_1_4c.xml
+* .idea/misc.xml
+* .idea/modules.xml
+* .idea/scopes/
+* .idea/scopes/scope_settings.xml
+* .idea/uiDesigner.xml
+* .idea/vcs.xml
+* .idea/workspace.xml
+* hostkey.ser
+* mobile.apk
+* pom.xml
+* proguard-project.txt
+* target/
+* target/R.txt
+* target/classes.dex
+* target/classes/
+* target/classes/ru/
+* target/classes/ru/terra/
+* target/classes/ru/terra/tproxy/
+* target/classes/ru/terra/tproxy/BuildConfig.class
+* target/classes/ru/terra/tproxy/MainActivity$1$1.class
+* target/classes/ru/terra/tproxy/MainActivity$1.class
+* target/classes/ru/terra/tproxy/MainActivity$2$1.class
+* target/classes/ru/terra/tproxy/MainActivity$2.class
+* target/classes/ru/terra/tproxy/MainActivity.class
+* target/classes/ru/terra/tproxy/PrefsActivity.class
+* target/classes/ru/terra/tproxy/R$attr.class
+* target/classes/ru/terra/tproxy/R$color.class
+* target/classes/ru/terra/tproxy/R$drawable.class
+* target/classes/ru/terra/tproxy/R$id.class
+* target/classes/ru/terra/tproxy/R$layout.class
+* target/classes/ru/terra/tproxy/R$menu.class
+* target/classes/ru/terra/tproxy/R$string.class
+* target/classes/ru/terra/tproxy/R$style.class
+* target/classes/ru/terra/tproxy/R$styleable.class
+* target/classes/ru/terra/tproxy/R$xml.class
+* target/classes/ru/terra/tproxy/R.class
+* target/classes/ru/terra/tproxy/TProxyApplication.class
+* target/classes/ru/terra/tproxy/proxy/
+* target/classes/ru/terra/tproxy/proxy/UpdateNotifier.class
+* target/classes/ru/terra/tproxy/proxy/Updater.class
+* target/classes/ru/terra/tproxy/service/
+* target/classes/ru/terra/tproxy/service/ProxyService$1.class
+* target/classes/ru/terra/tproxy/service/ProxyService$2.class
+* target/classes/ru/terra/tproxy/service/ProxyService$localUserInfo.class
+* target/classes/ru/terra/tproxy/service/ProxyService.class
+* target/classes/ru/terra/tproxy/service/ProxyServiceController.class
+* target/generated-sources/
+* target/generated-sources/r/
+* target/generated-sources/r/ru/
+* target/generated-sources/r/ru/terra/
+* target/generated-sources/r/ru/terra/tproxy/
+* target/generated-sources/r/ru/terra/tproxy/BuildConfig.java
+* target/generated-sources/r/ru/terra/tproxy/Manifest.java
+* target/generated-sources/r/ru/terra/tproxy/R.java
+* target/maven-archiver/
+* target/maven-archiver/pom.properties
+* target/maven-status/
+* target/maven-status/maven-compiler-plugin/
+* target/maven-status/maven-compiler-plugin/compile/
+* target/maven-status/maven-compiler-plugin/compile/default-compile/
+* target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+* target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+* target/tproxy-1.0.0.ap_
+* target/tproxy-1.0.0.apk
+* target/tproxy-1.0.0.jar
+* tproxy.iml
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => app/src/main/AndroidManifest.xml
+* res/ => app/src/main/res/
+* src/ => app/src/main/java/
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)
