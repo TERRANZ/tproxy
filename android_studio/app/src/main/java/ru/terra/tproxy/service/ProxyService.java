@@ -5,22 +5,35 @@ import android.content.*;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
+import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
+
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
+
 import org.littleshoot.proxy.ActivityTracker;
 import org.littleshoot.proxy.FlowContext;
 import org.littleshoot.proxy.FullFlowContext;
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
+
 import ru.terra.tproxy.MainActivity;
 import ru.terra.tproxy.R;
 import ru.terra.tproxy.proxy.Updater;
 
 import javax.net.ssl.SSLSession;
+
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringBufferInputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.InetSocketAddress;
 
 /**
@@ -31,6 +44,7 @@ public class ProxyService extends IntentService {
     public static final String PROXY_RECEIVER = "ru.terra.tproxy.service.ProxyService.receiver";
     private volatile boolean run;
     private Session session;
+    private LocalBroadcastManager lbm;
 
     public ProxyService() {
         super("Proxy intent service");
@@ -38,7 +52,7 @@ public class ProxyService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        final LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm = LocalBroadcastManager.getInstance(this);
         run = true;
 
         final HttpProxyServer proxy = DefaultHttpProxyServer.bootstrap()
@@ -105,7 +119,7 @@ public class ProxyService extends IntentService {
                 .start();
 
         try {
-            connectSSH();
+            connectSSH(false);
         } catch (JSchException e) {
             Log.e("ProxyService", "Unable to start ssh connection", e);
         }
@@ -163,7 +177,7 @@ public class ProxyService extends IntentService {
         }
     }
 
-    private void connectSSH() throws JSchException {
+    private void connectSSH(boolean forward) throws JSchException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String host = prefs.getString(getString(R.string.desktop_addr), "192.168.1.4");
         String user = "username";
@@ -179,7 +193,31 @@ public class ProxyService extends IntentService {
         session.setPassword(password);
         localUserInfo lui = new localUserInfo();
         session.setUserInfo(lui);
-        session.connect();
-        session.setPortForwardingR(tunnelLocalPort, tunnelRemoteHost, tunnelRemotePort);
+        try {
+            session.connect();
+        } catch (JSchException e) {
+            lbm.sendBroadcast(new Intent(MainActivity.STATUS_RECEIVER).putExtra("text", "Unable to connect to desktop: " + e.getMessage()));
+        }
+        if (session != null) {
+            if (forward)
+                session.setPortForwardingR(tunnelLocalPort, tunnelRemoteHost, tunnelRemotePort);
+            OutputStream output = new OutputStream() {
+                private StringBuilder string = new StringBuilder();
+
+                @Override
+                public void write(int b) throws IOException {
+                    this.string.append((char) b);
+                    Log.d("OutputStream", toString());
+                }
+
+                public String toString() {
+                    return this.string.toString();
+                }
+            };
+            session.openChannel("direct-tcpip").setOutputStream(output);
+
+        }
     }
+
+
 }

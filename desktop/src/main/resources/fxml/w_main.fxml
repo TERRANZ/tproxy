@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="509.0"
-            prefWidth="489.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="669.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ru.terra.tproxy.gui.MainController">
     <top>
         <Label fx:id="lblStatus" text="Статус" BorderPane.alignment="CENTER">
@@ -15,10 +14,38 @@
         </Label>
     </top>
     <center>
-        <ListView fx:id="lvLog" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <ListView fx:id="lvLog" prefHeight="474.0" prefWidth="388.0" BorderPane.alignment="CENTER">
             <BorderPane.margin>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
             </BorderPane.margin>
         </ListView>
     </center>
+    <right>
+        <VBox alignment="TOP_CENTER" prefHeight="484.0" prefWidth="254.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label alignment="CENTER" text="Подключенные"/>
+                <ListView fx:id="lvConnected" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </VBox.margin>
+                </ListView>
+            </children>
+        </VBox>
+    </right>
+    <left>
+        <VBox alignment="TOP_CENTER" prefHeight="484.0" prefWidth="91.0" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="btnStart" mnemonicParsing="false" onAction="#start" text="Старт">
+                    <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </VBox.margin>
+                </Button>
+                <Button fx:id="btnStop" mnemonicParsing="false" onAction="#stop" text="Стоп">
+                    <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </VBox.margin>
+                </Button>
+            </children>
+        </VBox>
+    </left>
 </BorderPane>
