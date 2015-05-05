@@ -36,8 +36,8 @@ public class MainActivity extends Activity {
         lbm = LocalBroadcastManager.getInstance(this);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final ListView lvLog = (ListView) findViewById(R.id.lvLog);
-        final List<String> log = new ArrayList<>();
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, log);
+        final List<String> log = new ArrayList<String>();
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, log);
         final TextView tvStatus = (TextView) findViewById(R.id.tvStatus);
         lvLog.setAdapter(adapter);
 

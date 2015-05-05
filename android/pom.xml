@@ -36,6 +36,12 @@
             <groupId>org.littleshoot</groupId>
             <artifactId>littleproxy</artifactId>
             <version>1.0.0-beta7</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>barchart-udt-bundle</artifactId>
+                    <groupId>com.barchart.udt</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.jcraft</groupId>
@@ -69,8 +75,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
         </plugins>
