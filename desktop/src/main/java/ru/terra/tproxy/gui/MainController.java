@@ -55,20 +55,33 @@ public class MainController implements Initializable {
     public void start(ActionEvent actionEvent) {
         service = new SSHService();
         service.start();
+        addToLog("Service started");
         ContextMenu menu = new ContextMenu();
-        MenuItem connect = new MenuItem("Подключить");
+        MenuItem connect = new MenuItem("Connect this device");
         connect.setOnAction((e) -> {
             SessionItem item = lvConnected.getSelectionModel().getSelectedItem();
             if (item != null) {
                 new Thread(() -> {
-                    MyFilterOutputStream stream = sessionStreams.get(item.s.getIoSession());
-                    if (stream != null)
-                        try {
-                            stream.write("forward".getBytes());
-                            stream.flush();
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
+                    sessionStreams.forEach((s, a) -> {
+                        if (item.s.getIoSession().equals(s)) {
+                            if (a != null)
+                                try {
+                                    a.write("forward".getBytes());
+                                    a.flush();
+                                } catch (IOException e1) {
+                                    e1.printStackTrace();
+                                }
+                        } else {
+                            if (a != null)
+                                try {
+                                    a.write("restart".getBytes());
+                                    a.flush();
+                                } catch (IOException e1) {
+                                    e1.printStackTrace();
+                                }
                         }
+                    });
+
                 }).start();
 
             }
@@ -78,6 +91,7 @@ public class MainController implements Initializable {
     }
 
     public void stop(ActionEvent actionEvent) {
+        addToLog("Service stop");
         if (service != null && service.isRunning())
             service.reset();
         if (sshd != null)
@@ -139,12 +153,14 @@ public class MainController implements Initializable {
         public void sessionCreated(IoSession ioSession) throws Exception {
             super.sessionCreated(ioSession);
             updateConnected();
+            addToLog("Session created");
         }
 
         @Override
         public void sessionClosed(IoSession ioSession) throws Exception {
             super.sessionClosed(ioSession);
             updateConnected();
+            addToLog("Session closed");
         }
 
         @Override
@@ -161,7 +177,8 @@ public class MainController implements Initializable {
                 e.printStackTrace();
             }
             lvConnected.getItems().clear();
-            lvConnected.setItems(FXCollections.observableArrayList(sshd.getActiveSessions().stream().map(s -> new SessionItem(s)).collect(Collectors.toList())));
+            if (sshd != null && sshd.getActiveSessions() != null && sshd.getActiveSessions().size() > 0)
+                lvConnected.setItems(FXCollections.observableArrayList(sshd.getActiveSessions().stream().map(s -> new SessionItem(s)).collect(Collectors.toList())));
         });
 
     }
@@ -250,5 +267,9 @@ public class MainController implements Initializable {
                 write(b[i]);
             }
         }
+    }
+
+    private void addToLog(String msg) {
+        Platform.runLater(() -> lvLog.getItems().add(msg));
     }
 }

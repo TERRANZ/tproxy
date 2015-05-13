@@ -7,7 +7,7 @@
             prefWidth="669.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ru.terra.tproxy.gui.MainController">
     <top>
-        <Label fx:id="lblStatus" text="Статус" BorderPane.alignment="CENTER">
+        <Label fx:id="lblStatus" text="Status" BorderPane.alignment="CENTER">
             <BorderPane.margin>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
             </BorderPane.margin>
@@ -23,7 +23,7 @@
     <right>
         <VBox alignment="TOP_CENTER" prefHeight="484.0" prefWidth="254.0" BorderPane.alignment="CENTER">
             <children>
-                <Label alignment="CENTER" text="Подключенные"/>
+                <Label alignment="CENTER" text="Connected"/>
                 <ListView fx:id="lvConnected" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
@@ -35,12 +35,12 @@
     <left>
         <VBox alignment="TOP_CENTER" prefHeight="484.0" prefWidth="91.0" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="btnStart" mnemonicParsing="false" onAction="#start" text="Старт">
+                <Button fx:id="btnStart" mnemonicParsing="false" onAction="#start" text="Start">
                     <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                     </VBox.margin>
                 </Button>
-                <Button fx:id="btnStop" mnemonicParsing="false" onAction="#stop" text="Стоп">
+                <Button fx:id="btnStop" mnemonicParsing="false" onAction="#stop" text="Stop">
                     <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                     </VBox.margin>

@@ -1,7 +1,11 @@
 package ru.terra.tproxy.service;
 
 import android.app.IntentService;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -12,9 +16,6 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
 
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponse;
-
 import org.acra.ACRA;
 import org.littleshoot.proxy.ActivityTracker;
 import org.littleshoot.proxy.FlowContext;
@@ -22,20 +23,17 @@ import org.littleshoot.proxy.FullFlowContext;
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 
-import ru.terra.tproxy.MainActivity;
-import ru.terra.tproxy.R;
-import ru.terra.tproxy.proxy.Updater;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetSocketAddress;
 
 import javax.net.ssl.SSLSession;
 
-import java.io.FilterInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.StringBufferInputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.net.InetSocketAddress;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponse;
+import ru.terra.tproxy.MainActivity;
+import ru.terra.tproxy.R;
+import ru.terra.tproxy.proxy.Updater;
 
 /**
  * Date: 02.04.15
@@ -43,11 +41,13 @@ import java.net.InetSocketAddress;
  */
 public class ProxyService extends IntentService {
     public static final String PROXY_RECEIVER = "ru.terra.tproxy.service.ProxyService.receiver";
+    private static final String TAG = ProxyService.class.getName();
     private volatile boolean run;
     private Session session;
     private LocalBroadcastManager lbm;
     private Channel chan;
     private HttpProxyServer proxy;
+    private boolean forward = false;
 
     public ProxyService() {
         super("Proxy intent service");
@@ -60,11 +60,32 @@ public class ProxyService extends IntentService {
 
 //        startProxy();
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (run) {
+                    if (session != null)
+                        if (!session.isConnected()) {
+                            try {
+                                fullStop();
+                            } catch (Exception e) {
+                                Log.e(TAG, "Unable to full stop", e);
+                            }
+                            try {
+                                Thread.sleep(10000);
+                                connectSSH(forward);
+                            } catch (Exception e) {
+                                Log.e(TAG, "Unable to connect ssh", e);
+                            }
+                        }
+                }
+            }
+        }).start();
+
         try {
-            connectSSH(false);
+            connectSSH(forward);
         } catch (Exception e) {
-            ACRA.getErrorReporter().handleException(e);
-            Log.e("ProxyService", "Unable to start ssh connection", e);
+            ACRA.getErrorReporter().handleSilentException(e);
         }
 
         lbm.sendBroadcast(new Intent(MainActivity.STATUS_RECEIVER).putExtra("text", "Started"));
@@ -87,16 +108,13 @@ public class ProxyService extends IntentService {
                             }
                             lbm.sendBroadcast(new Intent(MainActivity.STATUS_RECEIVER).putExtra("text", "Started as proxy"));
                             startProxy();
-                            try {
-                                connectSSH(true);
-                            } catch (Exception e) {
-                                ACRA.getErrorReporter().handleException(e);
-                                Log.e("ProxyService", "Unable to start ssh connection", e);
-                            }
                         }
                     }).start();
-
+                } else if (intent.getBooleanExtra("restart", false)) {
+                    forward = false;
+                    fullStop();
                 }
+
             }
         };
 
@@ -179,11 +197,14 @@ public class ProxyService extends IntentService {
     }
 
     private void fullStop() {
-        proxy.stop();
-        chan.disconnect();
-        session.disconnect();
+        if (proxy != null)
+            proxy.stop();
+        if (chan != null)
+            chan.disconnect();
+        if (session != null)
+            session.disconnect();
         lbm.sendBroadcast(new Intent(MainActivity.STATUS_RECEIVER).putExtra("text", "Stopped"));
-        run = false;
+//        run = false;
     }
 
     class localUserInfo implements UserInfo {
@@ -213,7 +234,8 @@ public class ProxyService extends IntentService {
         }
     }
 
-    private void connectSSH(boolean forward) throws JSchException, IOException {
+    private void connectSSH(boolean f) throws InterruptedException, JSchException, IOException {
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String host = prefs.getString(getString(R.string.desktop_addr), "192.168.1.4");
         String user = "username";
@@ -229,15 +251,11 @@ public class ProxyService extends IntentService {
         session.setPassword(password);
         localUserInfo lui = new localUserInfo();
         session.setUserInfo(lui);
-        try {
-            session.connect();
-        } catch (JSchException e) {
-            Updater.getUpdater().update("Unable to connect to desktop: " + e.getMessage(), 0l, "");
-            ACRA.getErrorReporter().handleException(e);
-            return;
-        }
+
+        session.connect();
+
         if (session != null) {
-            if (forward)
+            if (f)
                 session.setPortForwardingR(tunnelLocalPort, tunnelRemoteHost, tunnelRemotePort);
             chan = session.openChannel("shell");
             chan.connect();
@@ -251,15 +269,22 @@ public class ProxyService extends IntentService {
                             while (in.available() > 0) {
                                 int i = in.read(tmp, 0, 1024);
                                 if (i < 0) break;
-                                Updater.getUpdater().update(new String(tmp, 0, i), 0l, "");
-                                lbm.sendBroadcast(new Intent(ProxyService.PROXY_RECEIVER).putExtra("forward", true));
+                                String res = new String(tmp, 0, i);
+                                Log.i(TAG, "Received " + res);
+                                if ("forward".equalsIgnoreCase(res)) {
+                                    forward = true;
+                                    lbm.sendBroadcast(new Intent(ProxyService.PROXY_RECEIVER).putExtra("forward", true));
+                                } else if ("restart".equalsIgnoreCase(res)) {
+                                    forward = false;
+                                    lbm.sendBroadcast(new Intent(ProxyService.PROXY_RECEIVER).putExtra("restart", true));
+                                }
                                 break;
                             }
                             if (chan.isClosed()) {
                                 if (in.available() > 0) continue;
-                                Updater.getUpdater().update("exit-status: " + chan.getExitStatus(), 0l, "");
+                                Log.i(TAG, "exit-status: " + chan.getExitStatus());
                                 System.out.println("exit-status: " + chan.getExitStatus());
-                                fullStop();
+//                                    fullStop();
                                 break;
                             }
                             try {
