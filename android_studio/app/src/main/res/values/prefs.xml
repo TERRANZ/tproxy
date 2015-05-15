@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ip">terranz.ath.cx</string>
     <string name="login">login</string>
     <string name="pass">pass</string>
     <string name="loggedIn">loggedIn</string>
+    <string name="autostart">autostart</string>
+    <integer name="port">55555</integer>
+    <integer name="desktop_port">23</integer>
 </resources>

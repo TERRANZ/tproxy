@@ -96,8 +96,8 @@
     <orderEntry type="library" exported="" name="log4j-1.2.17" level="project" />
     <orderEntry type="library" exported="" name="slf4j-log4j12-1.7.2" level="project" />
     <orderEntry type="library" exported="" name="commons-lang3-3.1" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-r7" level="project" />
     <orderEntry type="library" exported="" name="littleproxy-1.0.0-beta7" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-r7" level="project" />
     <orderEntry type="library" exported="" name="jsch-0.1.52" level="project" />
     <orderEntry type="library" exported="" name="slf4j-api-1.7.2" level="project" />
   </component>

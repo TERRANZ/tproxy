@@ -4,18 +4,42 @@
     <eat-comment/>
     <color name="black_overlay">#66000000</color>
     <declare-styleable name="ButtonBarContainerTheme"><attr format="reference" name="metaButtonBarStyle"/><attr format="reference" name="metaButtonBarButtonStyle"/></declare-styleable>
+    <!-- From: file:/home/terranz/Dropbox/projects/freelance/tproxy/android_studio/app/src/main/res/values/prefs.xml -->
+    <eat-comment/>
+    <integer name="desktop_port">23</integer>
+    <integer name="port">55555</integer>
     <!-- From: file:/home/terranz/Dropbox/projects/freelance/tproxy/android_studio/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="app_name">Proxy</string>
+    <!-- From: file:/home/terranz/Dropbox/projects/freelance/tproxy/android_studio/app/src/main/res/values/prefs.xml -->
+    <eat-comment/>
+    <string name="autostart">autostart</string>
+    <!-- From: file:/home/terranz/Dropbox/projects/freelance/tproxy/android_studio/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="autostart_key">autostart</string>
+    <string name="autostart_key_title">Auto start at device boot</string>
     <string name="desktop_addr">desktop_addr</string>
-    <string name="desktop_addr_title">Desktop address</string>
+    <string name="desktop_addr_title">Desktop sshd address</string>
+    <string name="desktop_port_key">desktop_port</string>
+    <string name="desktop_port_key_title">Desktop sshd port</string>
     <string name="error_caught">Ошибка</string>
     <!-- From: file:/home/terranz/Dropbox/projects/freelance/tproxy/android_studio/app/src/main/res/values/prefs.xml -->
     <eat-comment/>
-    <string name="ip">terranz.ath.cx</string>
     <string name="loggedIn">loggedIn</string>
     <string name="login">login</string>
+    <!-- From: file:/home/terranz/Dropbox/projects/freelance/tproxy/android_studio/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="login_key">login</string>
+    <string name="login_key_title">Login</string>
+    <!-- From: file:/home/terranz/Dropbox/projects/freelance/tproxy/android_studio/app/src/main/res/values/prefs.xml -->
+    <eat-comment/>
     <string name="pass">pass</string>
+    <!-- From: file:/home/terranz/Dropbox/projects/freelance/tproxy/android_studio/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="pass_key">pass</string>
+    <string name="pass_key_title">Password</string>
+    <string name="port_key">port</string>
+    <string name="port_key_title">Forwarding port</string>
     <!-- From: file:/home/terranz/Dropbox/projects/freelance/tproxy/android_studio/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="FullscreenTheme" parent="android:Theme.Holo.Light">

@@ -3,6 +3,8 @@ package ru.terra.tproxy;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import ru.terra.tproxy.service.ProxyService;
 
@@ -12,6 +14,8 @@ import ru.terra.tproxy.service.ProxyService;
 public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        context.startService(new Intent(context, ProxyService.class));
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        if (prefs.getBoolean(context.getString(R.string.autostart), false))
+            context.startService(new Intent(context, ProxyService.class));
     }
 }

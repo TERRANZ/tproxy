@@ -3,5 +3,15 @@
     <string name="app_name">Proxy</string>
     <string name="error_caught">Ошибка</string>
     <string name="desktop_addr">desktop_addr</string>
-    <string name="desktop_addr_title">Desktop address</string>
+    <string name="desktop_addr_title">Desktop sshd address</string>
+    <string name="desktop_port_key">desktop_port</string>
+    <string name="desktop_port_key_title">Desktop sshd port</string>
+    <string name="login_key">login</string>
+    <string name="login_key_title">Login</string>
+    <string name="pass_key">pass</string>
+    <string name="pass_key_title">Password</string>
+    <string name="autostart_key">autostart</string>
+    <string name="autostart_key_title">Auto start at device boot</string>
+    <string name="port_key">port</string>
+    <string name="port_key_title">Forwarding port</string>
 </resources>

@@ -17,23 +17,14 @@ import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
 
 import org.acra.ACRA;
-import org.littleshoot.proxy.ActivityTracker;
-import org.littleshoot.proxy.FlowContext;
-import org.littleshoot.proxy.FullFlowContext;
 import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetSocketAddress;
 
-import javax.net.ssl.SSLSession;
-
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponse;
 import ru.terra.tproxy.MainActivity;
 import ru.terra.tproxy.R;
-import ru.terra.tproxy.proxy.Updater;
 
 /**
  * Date: 02.04.15
@@ -47,7 +38,8 @@ public class ProxyService extends IntentService {
     private LocalBroadcastManager lbm;
     private Channel chan;
     private HttpProxyServer proxy;
-    private boolean forward = false;
+    private boolean forward = true;
+    private SharedPreferences preferences;
 
     public ProxyService() {
         super("Proxy intent service");
@@ -57,8 +49,18 @@ public class ProxyService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         lbm = LocalBroadcastManager.getInstance(this);
         run = true;
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-//        startProxy();
+        startProxy();
+
+        SharedPreferences.OnSharedPreferenceChangeListener prefsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                lbm.sendBroadcast(new Intent(ProxyService.PROXY_RECEIVER).putExtra("restart", true));
+            }
+        };
+
+        preferences.registerOnSharedPreferenceChangeListener(prefsListener);
 
         new Thread(new Runnable() {
             @Override
@@ -74,6 +76,7 @@ public class ProxyService extends IntentService {
                             try {
                                 Thread.sleep(10000);
                                 connectSSH(forward);
+                                startProxy();
                             } catch (Exception e) {
                                 Log.e(TAG, "Unable to connect ssh", e);
                             }
@@ -94,24 +97,26 @@ public class ProxyService extends IntentService {
             public void onReceive(Context context, Intent intent) {
                 if (intent.getBooleanExtra("stop", false)) {
                     fullStop();
-                } else if (intent.getBooleanExtra("forward", false)) {
-                    chan.disconnect();
-                    session.disconnect();
-
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            lbm.sendBroadcast(new Intent(MainActivity.STATUS_RECEIVER).putExtra("text", "Started as proxy"));
-                            startProxy();
-                        }
-                    }).start();
-                } else if (intent.getBooleanExtra("restart", false)) {
-                    forward = false;
+                }
+//                else if (intent.getBooleanExtra("forward", false)) {
+//                    chan.disconnect();
+//                    session.disconnect();
+//
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            try {
+//                                Thread.sleep(3000);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+//                            lbm.sendBroadcast(new Intent(MainActivity.STATUS_RECEIVER).putExtra("text", "Started as proxy"));
+//                            startProxy();
+//                        }
+//                    }).start();
+//                }
+                else if (intent.getBooleanExtra("restart", false)) {
+//                    forward = false;
                     fullStop();
                 }
 
@@ -133,66 +138,66 @@ public class ProxyService extends IntentService {
 
     private void startProxy() {
         proxy = DefaultHttpProxyServer.bootstrap()
-                .withPort(55555)
+                .withPort(Integer.parseInt(preferences.getString(getString(R.string.port_key), "55555")))
                 .withAllowLocalOnly(false)
                 .withListenOnAllAddresses(true)
                 .withTransparent(true)
-                .plusActivityTracker(new ActivityTracker() {
-                    @Override
-                    public void clientConnected(InetSocketAddress clientAddress) {
-
-                    }
-
-                    @Override
-                    public void clientSSLHandshakeSucceeded(InetSocketAddress clientAddress, SSLSession sslSession) {
-
-                    }
-
-                    @Override
-                    public void clientDisconnected(InetSocketAddress clientAddress, SSLSession sslSession) {
-
-                    }
-
-                    @Override
-                    public void bytesReceivedFromClient(FlowContext flowContext, int numberOfBytes) {
-
-                    }
-
-                    @Override
-                    public void requestReceivedFromClient(FlowContext flowContext, HttpRequest httpRequest) {
-
-                    }
-
-                    @Override
-                    public void bytesSentToServer(FullFlowContext flowContext, int numberOfBytes) {
-
-                    }
-
-                    @Override
-                    public void requestSentToServer(FullFlowContext flowContext, HttpRequest httpRequest) {
-
-                    }
-
-                    @Override
-                    public void bytesReceivedFromServer(FullFlowContext flowContext, int numberOfBytes) {
-
-                    }
-
-                    @Override
-                    public void responseReceivedFromServer(FullFlowContext flowContext, HttpResponse httpResponse) {
-                        Updater.getUpdater().update(flowContext.getServerHostAndPort(), 0l, "");
-                    }
-
-                    @Override
-                    public void bytesSentToClient(FlowContext flowContext, int numberOfBytes) {
-
-                    }
-
-                    @Override
-                    public void responseSentToClient(FlowContext flowContext, HttpResponse httpResponse) {
-
-                    }
-                })
+//                .plusActivityTracker(new ActivityTracker() {
+//                    @Override
+//                    public void clientConnected(InetSocketAddress clientAddress) {
+//
+//                    }
+//
+//                    @Override
+//                    public void clientSSLHandshakeSucceeded(InetSocketAddress clientAddress, SSLSession sslSession) {
+//
+//                    }
+//
+//                    @Override
+//                    public void clientDisconnected(InetSocketAddress clientAddress, SSLSession sslSession) {
+//
+//                    }
+//
+//                    @Override
+//                    public void bytesReceivedFromClient(FlowContext flowContext, int numberOfBytes) {
+//
+//                    }
+//
+//                    @Override
+//                    public void requestReceivedFromClient(FlowContext flowContext, HttpRequest httpRequest) {
+//
+//                    }
+//
+//                    @Override
+//                    public void bytesSentToServer(FullFlowContext flowContext, int numberOfBytes) {
+//
+//                    }
+//
+//                    @Override
+//                    public void requestSentToServer(FullFlowContext flowContext, HttpRequest httpRequest) {
+//
+//                    }
+//
+//                    @Override
+//                    public void bytesReceivedFromServer(FullFlowContext flowContext, int numberOfBytes) {
+//
+//                    }
+//
+//                    @Override
+//                    public void responseReceivedFromServer(FullFlowContext flowContext, HttpResponse httpResponse) {
+////                        Updater.getUpdater().update(flowContext.getServerHostAndPort(), 0l, "");
+//                    }
+//
+//                    @Override
+//                    public void bytesSentToClient(FlowContext flowContext, int numberOfBytes) {
+//
+//                    }
+//
+//                    @Override
+//                    public void responseSentToClient(FlowContext flowContext, HttpResponse httpResponse) {
+//
+//                    }
+//                })
                 .start();
     }
 
@@ -210,6 +215,10 @@ public class ProxyService extends IntentService {
     class localUserInfo implements UserInfo {
         String passwd;
 
+        localUserInfo(String passwd) {
+            this.passwd = passwd;
+        }
+
         public String getPassword() {
             return passwd;
         }
@@ -219,7 +228,7 @@ public class ProxyService extends IntentService {
         }
 
         public String getPassphrase() {
-            return null;
+            return passwd;
         }
 
         public boolean promptPassphrase(String message) {
@@ -236,20 +245,19 @@ public class ProxyService extends IntentService {
 
     private void connectSSH(boolean f) throws InterruptedException, JSchException, IOException {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String host = prefs.getString(getString(R.string.desktop_addr), "192.168.1.4");
-        String user = "username";
-        String password = "password";
-        int port = 44444;
+        String host = preferences.getString(getString(R.string.desktop_addr), "192.168.1.4");
+        String user = preferences.getString(getString(R.string.login_key), "");
+        String password = preferences.getString(getString(R.string.pass_key), "");
+        int port = Integer.parseInt(preferences.getString(getString(R.string.desktop_port_key), "23"));
 
-        int tunnelLocalPort = 55555;
+        int tunnelLocalPort = Integer.parseInt(preferences.getString(getString(R.string.port_key), "55555"));
         String tunnelRemoteHost = "127.0.0.1";
-        int tunnelRemotePort = 55555;
+        int tunnelRemotePort = Integer.parseInt(preferences.getString(getString(R.string.port_key), "55555"));
 
         JSch jsch = new JSch();
         session = jsch.getSession(user, host, port);
         session.setPassword(password);
-        localUserInfo lui = new localUserInfo();
+        localUserInfo lui = new localUserInfo(password);
         session.setUserInfo(lui);
 
         session.connect();
