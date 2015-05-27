@@ -264,7 +264,7 @@ public class ProxyService extends IntentService {
 
         if (session != null) {
             if (f)
-                session.setPortForwardingR(tunnelLocalPort, tunnelRemoteHost, tunnelRemotePort);
+                session.setPortForwardingR("0.0.0.0", tunnelLocalPort, tunnelRemoteHost, tunnelRemotePort);
             chan = session.openChannel("shell");
             chan.connect();
             final InputStream in = chan.getInputStream();
