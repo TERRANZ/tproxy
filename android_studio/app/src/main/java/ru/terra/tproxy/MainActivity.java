@@ -1,7 +1,12 @@
 package ru.terra.tproxy;
 
 import android.app.Activity;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -11,12 +16,13 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import ru.terra.tproxy.proxy.UpdateNotifier;
-import ru.terra.tproxy.proxy.Updater;
-import ru.terra.tproxy.service.ProxyService;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ru.terra.tproxy.proxy.UpdateNotifier;
+import ru.terra.tproxy.proxy.Updater;
+import ru.terra.tproxy.service.ProxyService;
 
 /**
  * Date: 24.06.14
@@ -32,6 +38,11 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a_main);
+
+        PackageManager p = getPackageManager();
+        p.setComponentEnabledSetting(getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+
+        startService(new Intent(this, ProxyService.class));
 
         lbm = LocalBroadcastManager.getInstance(this);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
